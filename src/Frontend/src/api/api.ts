@@ -2,8 +2,8 @@ import { SupplierListQuery, CustomerListQuery, EmployeeListQuery } from "./types
 
 
 const api = {
-    loadSuppliers: (): Promise<SupplierListQuery[]> => {
-        return fetch("/api/suppliers/list")
+    loadSuppliers: (name?: string): Promise<SupplierListQuery[]> => {
+        return fetch(`/api/suppliers/list?name=${name ?? ''}`)
         .then((response) => {
             if (!response.ok) {
                 throw new Error(`HTTP Error: ${response.status}`);

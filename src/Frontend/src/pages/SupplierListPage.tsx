@@ -1,4 +1,6 @@
 import {
+  Button,
+  Grid,
   Paper,
   Table,
   TableBody,
@@ -6,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
   styled,
   tableCellClasses,
@@ -16,13 +19,14 @@ import api from "../api/api";
 
 export default function SupplierListPage() {
   const [suppliersList, setSuppliersList] = useState<SupplierListQuery[]>([]);
+  const [nameFilter, setNameFilter] = useState<string>('')
 
   useEffect(() => {
     loadSuppliers()
   }, []);
 
   function loadSuppliers(){
-    api.loadSuppliers()
+    api.loadSuppliers(nameFilter)
       .then((response) => setSuppliersList(response))
   }
 
@@ -31,6 +35,28 @@ export default function SupplierListPage() {
       <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
         Suppliers
       </Typography>
+
+      <Grid
+      container={true}
+      component="form"
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
+      }}
+      noValidate
+      autoComplete="off"
+      >
+        <TextField
+          id="nameFilter"
+          label="Name"
+          value={nameFilter}
+          onChange={(value) => setNameFilter(value.target.value)}
+        />
+        <Button variant="contained" onClick={loadSuppliers}>Filter</Button>
+      
+      </Grid>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
