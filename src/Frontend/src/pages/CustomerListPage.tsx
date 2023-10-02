@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled, tableCellClasses } from "@mui/material";
+import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from "@mui/material";
 import { useEffect, useState } from "react";
 
 interface CustomerListQuery {
@@ -16,9 +16,15 @@ interface CustomerListQuery {
 
 export default function CustomerListPage() {
     const [list, setList] = useState<CustomerListQuery[]>([]);
+    const [nameFilter, setNameFilter] = useState<string>('')
+    const [emailFilter, setEmailFilter] = useState<string>('')
 
   useEffect(() => {
-    fetch("/api/customers/list")
+    loadCustomers()
+  }, []);
+
+  function loadCustomers(){
+    fetch(`/api/customers/list?name=${nameFilter}&email=${emailFilter}`)
       .then((response) => {
         return response.json();
       })
@@ -26,13 +32,41 @@ export default function CustomerListPage() {
         setList(data as CustomerListQuery[]);
       })
       .catch(error => console.error('error while getting customers:', error));
-  }, []);
+  }
 
   return (
     <>
       <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
         Customers
       </Typography>
+
+      <Grid
+      container={true}
+      component="form"
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
+      }}
+      noValidate
+      autoComplete="off"
+      >
+        <TextField
+          id="nameFilter"
+          label="Name"
+          value={nameFilter}
+          onChange={(value) => setNameFilter(value.target.value)}
+        />
+        <TextField
+          id="emailFilter"
+          label="Email"
+          value={emailFilter}
+          onChange={(value) => setEmailFilter(value.target.value)}
+        />
+        <Button variant="contained" onClick={loadCustomers}>Filter</Button>
+      
+      </Grid>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
