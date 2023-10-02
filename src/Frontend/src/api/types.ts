@@ -1,3 +1,10 @@
+export interface SupplierListQuery {
+    id: number;
+    name: string;
+    address: string;
+    email: string;
+    phone: string;
+}
 
 export interface CustomerListQuery {
     id: number;
@@ -12,10 +19,15 @@ export interface CustomerListQuery {
     }
 }
 
-export interface SupplierListQuery {
+export interface EmployeeListQuery {
     id: number;
-    name: string;
+    firstName: string;
+    lastName: string;
     address: string;
     email: string;
     phone: string;
+    department?: {
+        code: string;
+        description: string;
+    }
 }

@@ -1,4 +1,4 @@
-import { CustomerListQuery, SupplierListQuery } from "./types";
+import { SupplierListQuery, CustomerListQuery, EmployeeListQuery } from "./types";
 
 
 const api = {
@@ -15,8 +15,8 @@ const api = {
             return [] as SupplierListQuery[];
         });
     },
-    loadCustomers: (nameFilter?: string, emailFilter?: string): Promise<CustomerListQuery[]> => {
-        return fetch(`/api/customers/list?name=${nameFilter ?? ''}&email=${emailFilter ?? ''}`)
+    loadCustomers: (name?: string, email?: string): Promise<CustomerListQuery[]> => {
+        return fetch(`/api/customers/list?name=${name ?? ''}&email=${email ?? ''}`)
         .then((response) => {
             if (!response.ok) {
                 throw new Error(`HTTP Error: ${response.status}`);
@@ -26,6 +26,19 @@ const api = {
         .catch((error) => {
             console.error('Error while loading customers:', error);
             return [] as CustomerListQuery[];
+        });
+    },
+    loadEmployees: (firstName?: string, lastName?: string): Promise<EmployeeListQuery[]> => {
+        return fetch(`/api/employees/list?firstName=${firstName ?? ''}&lastName=${lastName ?? ''}`)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            return response.json() as Promise<EmployeeListQuery[]>;
+        })
+        .catch((error) => {
+            console.error('Error while loading employees:', error);
+            return [] as EmployeeListQuery[];
         });
     },
 }
