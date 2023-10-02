@@ -1,37 +1,20 @@
 import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from "@mui/material";
 import { useEffect, useState } from "react";
-
-interface CustomerListQuery {
-    id: number;
-    name: string;
-    address: string;
-    email: string;
-    phone: string;
-    iban: string;
-    category?: {
-        code: string;
-        description: string;
-    }
-  }
+import { CustomerListQuery } from "../api/types";
+import api from "../api/api";
 
 export default function CustomerListPage() {
-    const [list, setList] = useState<CustomerListQuery[]>([]);
-    const [nameFilter, setNameFilter] = useState<string>('')
-    const [emailFilter, setEmailFilter] = useState<string>('')
+  const [customersList, setCustomersList] = useState<CustomerListQuery[]>([]);
+  const [nameFilter, setNameFilter] = useState<string>('')
+  const [emailFilter, setEmailFilter] = useState<string>('')
 
   useEffect(() => {
     loadCustomers()
   }, []);
 
   function loadCustomers(){
-    fetch(`/api/customers/list?name=${nameFilter}&email=${emailFilter}`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setList(data as CustomerListQuery[]);
-      })
-      .catch(error => console.error('error while getting customers:', error));
+    api.loadCustomers(nameFilter, emailFilter)
+      .then((response) => setCustomersList(response))
   }
 
   return (
@@ -82,7 +65,7 @@ export default function CustomerListPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {list.map((row) => (
+            {customersList.map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

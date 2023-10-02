@@ -11,27 +11,20 @@ import {
   tableCellClasses,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-
-interface SupplierListQuery {
-  id: number;
-  name: string;
-  address: string;
-  email: string;
-  phone: string;
-}
+import { SupplierListQuery } from "../api/types";
+import api from "../api/api";
 
 export default function SupplierListPage() {
-  const [list, setList] = useState<SupplierListQuery[]>([]);
+  const [suppliersList, setSuppliersList] = useState<SupplierListQuery[]>([]);
 
   useEffect(() => {
-    fetch("/api/suppliers/list")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setList(data as SupplierListQuery[]);
-      });
+    loadSuppliers()
   }, []);
+
+  function loadSuppliers(){
+    api.loadSuppliers()
+      .then((response) => setSuppliersList(response))
+  }
 
   return (
     <>
@@ -50,7 +43,7 @@ export default function SupplierListPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {list.map((row) => (
+            {suppliersList.map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
